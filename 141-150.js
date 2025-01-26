@@ -9,8 +9,8 @@ function isValidEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
-console.log(isValidEmail("test@example.com"));
-console.log(isValidEmail("invalid-email")); 
+console.log(isValidEmail("jay@gmail.com"));
+console.log(isValidEmail("jay-mail")); 
 
 // ques 143
 function containsOnlyDigits(str) {

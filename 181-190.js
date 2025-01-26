@@ -1,92 +1,114 @@
-// 181. 
-function debounce(func, delay) {
-    let timer;
-    return function (...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => func.apply(this, args), delay);
-    };
-}
-
-// 182. 
-function throttle(func, limit) {
-    let lastFunc;
-    let lastRan;
-    return function (...args) {
-        const context = this;
-        if (!lastRan) {
-            func.apply(context, args);
-            lastRan = Date.now();
-        } else {
-            clearTimeout(lastFunc);
-            lastFunc = setTimeout(function () {
-                if ((Date.now() - lastRan) >= limit) {
-                    func.apply(context, args);
-                    lastRan = Date.now();
-                }
-            }, limit - (Date.now() - lastRan));
+// ques 181
+function groupBy(array, property) {
+    return array.reduce((acc, obj) => {
+        const key = obj[property];
+        if (!acc[key]) {
+            acc[key] = [];
         }
-    };
+        acc[key].push(obj);
+        return acc;
+    }, {});
 }
+const data = [
+    { category: "fruit", name: "apple" },
+    { category: "fruit", name: "banana" },
+    { category: "vegetable", name: "carrot" }
+];
+console.log(groupBy(data, "category"));
 
-// 183. 
-function flattenArray(arr) {
-    return arr.reduce((flat, toFlatten) => {
-        return flat.concat(Array.isArray(toFlatten) ? flattenArray(toFlatten) : toFlatten);
-    }, []);
+// ques 182
+const transformedData = data.map(item => ({
+    type: item.category,
+    itemName: item.name
+}));
+console.log(transformedData);
+
+// ques 183
+function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
+const original = { a: 1, b: { c: 2 } };
+const clone = deepClone(original);
+console.log(clone);
 
-// 184. 
-function factorial(n) {
-    if (n === 0) return 1;
-    return n * factorial(n - 1);
+// ques 184
+function mergeUniqueArrays(...arrays) {
+    return [...new Set(arrays.flat())];
 }
+console.log(mergeUniqueArrays([1, 2], [2, 3], [3, 4])); 
 
-// 185.
-function isEmptyObject(obj) {
-    return Object.keys(obj).length === 0;
+// ques 185
+function countProperties(array, property) {
+    return array.reduce((acc, obj) => {
+        const key = obj[property];
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+    }, {});
 }
+console.log(countProperties(data, "category"));
 
-// 186.
-function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
-// 187. 
-function gcd(a, b) {
-    if (!b) return a;
-    return gcd(b, a % b);
-}
-
-// 188. 
-function lcm(a, b) {
-    return (a * b) / gcd(a, b);
-}
-
-// 189. 
-function findPermutations(str) {
-    if (str.length === 0) return [''];
-
-    const permutations = [];
-    for (let i = 0; i < str.length; i++) {
-        const char = str[i];
-        const remaining = str.slice(0, i) + str.slice(i + 1);
-        for (let perm of findPermutations(remaining)) {
-            permutations.push(char + perm);
+// ques 186
+function sortByProperties(array, properties) {
+    return array.sort((a, b) => {
+        for (const property of properties) {
+            if (a[property] > b[property]) return 1;
+            if (a[property] < b[property]) return -1;
         }
-    }
-    return permutations;
+        return 0;
+    });
 }
+const people = [
+    { name: "jaay", age: 30 },
+    { name: "zayy", age: 25 },
+    { name: "jay", age: 20 }
+];
+console.log(sortByProperties(people, ["name", "age"]));
 
-// 190.
-function fibonacci(n) {
-    const sequence = [0, 1];
-    for (let i = 2; i < n; i++) {
-        sequence.push(sequence[i - 1] + sequence[i - 2]);
-    }
-    return sequence.slice(0, n);
+// ques 187
+function createNestedObject(pairs) {
+    return pairs.reduce((acc, [key, value]) => {
+        const keys = key.split('.');
+        keys.reduce((nested, key, index) => {
+            if (index === keys.length - 1) {
+                nested[key] = value;
+            } else {
+                nested[key] = nested[key] || {};
+            }
+            return nested[key];
+        }, acc);
+        return acc;
+    }, {});
 }
+console.log(createNestedObject([["a.b.c", 1], ["a.b.d", 2]]));
 
+// ques 188
+function groupByReduce(array, property) {
+    return array.reduce((acc, obj) => {
+        const key = obj[property];
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+        acc[key].push(obj);
+        return acc;
+    }, {});
+}
+console.log(groupByReduce(data, "category"));
+
+// ques 189
+function findDifference(arr1, arr2, key) {
+    const arr2Keys = arr2.map(obj => obj[key]);
+    return arr1.filter(obj => !arr2Keys.includes(obj[key]));
+}
+const arr1 = [{ id: 1, name: "zayy" }, { id: 2, name: "Jayy" }];
+const arr2 = [{ id: 1, name: "Jayy" }];
+console.log(findDifference(arr1, arr2, "name")); 
+
+// ques 190
+function filterAndTransform(array, filterFn, transformFn) {
+    return array.filter(filterFn).map(transformFn);
+}
+const items = [
+    { name: "apple", type: "fruit" },
+    { name: "carrot", type: "vegetable" }
+];
+console.log(filterAndTransform(items, item => item.type === "fruit", item => item.name));
